@@ -1,0 +1,194 @@
+<!-- shamelessly stolen from scott murray: http://alignedleft.com/tutorials -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>D3 Test</title>
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+		<style type="text/css">
+		svg {
+		  border: 2px solid orange;
+		}
+		
+		.bar {
+	 	  fill: #ddd;
+		}
+		.g-ESPN {
+		   fill: red;
+	    }
+		.g-TNT {
+		   fill: #999;
+	    }	
+		.g-ESPN2 {
+		   fill: #999;
+	    }
+		.g-TBS {
+		   fill: #999;
+	    }
+		.g-Bravo {
+		   fill: #999;
+	    }
+		.g-MSNBC {
+		   fill: #999;
+	    }
+	
+	
+		.g-comedycentral {
+		   fill: #999;
+	   	}
+		.g-theweatherchannel {
+		   fill: #999;
+	    }
+		.g-CSPAN {
+		   fill: #999;
+	    }
+		.g-label{
+			font-family: Helvetica, Arial, Sans-serif;
+			font-size: 10px;
+		}
+		
+		</style>
+
+    </head>
+    <body>
+        <script type="text/javascript">
+            // Your beautiful D3 code will go here
+
+			d3.select("body").append("h1").text("Cost per pay TV subscriber per month")
+			var margin = {top: 20, right: 10, bottom: 20, left: 10};
+
+			var width = 600 - margin.left - margin.right,
+			height = 250 - margin.top - margin.bottom;
+
+			var svg = d3.select("body").append("svg")
+			    .attr("width", width + margin.left + margin.right)
+			    .attr("height", height + margin.top + margin.bottom)
+			    .append("g")
+			    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+			
+			
+				
+				
+					d3.csv("subscription-prices.csv", function(err, prices) {
+					          console.log(prices)
+					
+							prices.forEach(function(d) {
+							    // recasts d.2013 as a number, not a string
+							    d.X2013 = +d.X2013;
+							});
+							
+							prices.sort(function(a,b) {
+							    return a.X2013 - b.X2013;
+							});
+							
+									
+					var y = d3.scale.linear()
+										    .domain([0,6])
+										    .range([0,height]);
+
+					var x = d3.scale.linear()
+										    .domain([0,prices.length])
+										    .range([0,width]);
+
+								
+										
+												var bar = svg.selectAll(".bar")
+												    .data(prices)
+												  .enter().append("rect")
+												    .attr("width", 2)
+												    .attr("height", function(d) { return y(d.X2013)} )
+												    .attr("y", function(d) { return height - y(d.X2013)  })
+												    .attr("x", function(d, i) { return 3 * i})
+												    .attr("class", "bar")
+													.classed("g-ESPN", function(d) { return d.Network == "ESPN"})
+													.classed("g-TNT", function(d) { return d.Network == "TNT"})
+													.classed("g-ESPN2", function(d) { return d.Network == "ESPN2"})
+													.classed("g-TBS", function(d) { return d.Network == "TBS"})
+													.classed("g-Bravo", function(d) { return d.Network == "Bravo"})
+													.classed("g-MSNBC", function(d) { return d.Network == "MSNBC"})	
+													.classed("g-comedycentral", function(d) { return d.Network == "Comedy Central"})
+													.classed("g-theweatherchannel", function(d) { return d.Network == "The Weather Channel"})
+													.classed("g-CSPAN", function(d) { return d.Network == "C-SPAN"});
+													
+														svg.append("text")
+													    	.attr("class", "g-label")
+													    	.attr("x", 512)
+													    	.attr("y", 20)
+													    	.text("ESPN ($5.54)");
+													
+														svg.append("text")
+													    	.attr("class", "g-label")
+													  		.attr("x", 507)
+													    	.attr("y", 85)
+														    .text("TNT ($1.24)");
+														
+														svg.append("text")
+													    	.attr("class", "g-label")														  	
+															.attr("x", 477)
+													    	.attr("y", 100)
+														    .text("ESPN2 ($0.70)");
+
+														svg.append("text")
+													    	.attr("class", "g-label")
+													  		.attr("x", 469)
+													    	.attr("y", 115)
+														    .text("TBS ($0.59)");
+
+														svg.append("text")
+													    	.attr("class", "g-label")
+													  		.attr("x", 435)
+													    	.attr("y", 130)
+														    .text("Bravo ($0.24)");
+
+														svg.append("text")
+													    	.attr("class", "g-label")
+													  		.attr("x", 390)
+													    	.attr("y", 150)
+														    .text("MSNBC ($0.21)");
+													
+														svg.append("text")
+													    	.attr("class", "g-label")
+													   		.attr("x", 305)
+													    	.attr("y", 170)
+														    .text("Comedy Central ($0.18)");
+													
+														svg.append("text")
+													    	.attr("class", "g-label")
+													   		.attr("x", 180)
+													    	.attr("y", 186)
+														    .text("The Weather Channel ($0.13)");
+														
+														svg.append("text")
+													    	.attr("class", "g-label")
+													  		.attr("x", 90)
+													    	.attr("y", 200)
+														    .text("C-SPAN ($0.06)");
+														
+														
+													
+					 						//var networks = ["Comedy Central","TNT", "C-SPAN", "The Weather Channel", "MSNBC", "Bravo", "TBS", "ESPN2"];
+										
+											//.classed("g-minor-highlight", function(d) { return networks.indexOf(d.Network) >= 0; });
+											
+											//.classed("g-comedycentral", function(d) { return d.Network == "comedycentral"});
+											
+										//	var labels = svg.selectAll(".g-labels")
+												//		.data(prices)
+												//		.enter().append("text")
+												//		.attr("x", function(d,i) { return 4*i})
+												//		.attr("y", function(d) { return height - y(d.X2013) - 14 })
+												//		text(function(d) { return d.Network + " ($"+ d.X2013 +")"; })
+												//		.attr("class", "g-labels")
+												//		.classed("g-minor-highlight-label", function(d) { return networks.indexOf(d.Network) >= 0; });
+	
+														
+												
+					        });
+			
+document.write("1. What about comparing promotion prices? 2. How has ESPN prices changed over time, has it changed with no. of viewers? 3. What are the differences in audience demographics since ESPN airs in Asia while The Weather Channel does not?")					
+			
+			
+        </script>
+    </body>
+</html>
